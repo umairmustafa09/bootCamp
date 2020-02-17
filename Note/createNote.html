@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Create Note</title>
+    <script>
+      if (JSON.parse(localStorage.getItem('Notes')))
+        arr = JSON.parse(localStorage.getItem('Notes'));
+      else {
+        arr = [];
+        arr.pop();
+      }
+      //add Note
+      function addNote() {
+        let title = document.getElementById('noteTitle').value;
+        let body = document.getElementById('noteBody').value;
+        note = {
+          title: title,
+          body: body,
+          Time: new Date()
+        };
+        arr.push(note);
+        window.localStorage.setItem('Notes', JSON.stringify(arr));
+      }
+    </script>
+    <style></style>
+  </head>
+  <body>
+    <h1>Create Note</h1>
+    <input type="text" id="noteTitle" placeholder="Title" />
+    <input type="text" id="noteBody" placeholder="Body" />
+    <button onclick="addNote()">ADD</button>
+    <div>
+      <div id="note"></div>
+    </div>
+  </body>
+</html>

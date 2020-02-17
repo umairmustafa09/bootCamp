@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>Note</title>
+  </head>
+  <body>
+    <h1>Note APP</h1>
+    <div id="noteData"></div>
+    <br />
+    <input type="text" id="filterTitle" placeholder="Title" />
+    <button onclick="filter()">Filter</button>
+    <div id="filter"></div>
+    <button onclick="sortByAlphabets()">Sort By Alphabets</button>
+    <div id="sortByAlphabets"></div>
+    <br />
+    <div id="filterTheValue"></div>
+    <button onclick="sortByCreated()">Sort As Created</button>
+    <div id="sortedArrayByCreated"></div>
+    <a href="./createNote.html">Create Note</a>
+  </body>
+  <script>
+    let arr = JSON.parse(localStorage.getItem('Notes'));
+    render();
+
+    function sortByCreated() {
+      let sortedArray = arr.sort();
+      console.log(sortedArray);
+      for (let i = 0; i < arr.length; i++) {
+        document.getElementById('sortedArrayByCreated').innerHTML +=
+          '<div>' +
+          'Title: ' +
+          arr[i].title +
+          '<br />' +
+          'Body: ' +
+          '   ' +
+          arr[i].body +
+          '   ' +
+          'Time: ' +
+          '   ' +
+          arr[i].Time +
+          '<div>';
+        +'<br />';
+      }
+    }
+
+    function remove(index) {
+      arr.splice(index, 1);
+      window.localStorage.setItem('Notes', JSON.stringify(arr));
+      location.reload();
+    }
+
+    function edit(index) {
+      let value = window.prompt('Enter Changing');
+      arr[index].body = value;
+      window.localStorage.setItem('Notes', JSON.stringify(arr));
+      location.reload();
+    }
+
+    function filter() {
+      let filterArray = [];
+      filterArray.pop();
+
+      let value = document.getElementById('filterTitle').value;
+
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].title == value) {
+          filterArray.push(arr[i]);
+        }
+      }
+      for (let i = 0; i < filterArray.length; i++) {
+        document.getElementById('filter').innerHTML +=
+          '<div>' +
+          'Title: ' +
+          arr[i].title +
+          '<br />' +
+          'Body: ' +
+          '   ' +
+          arr[i].body +
+          '<br />';
+      }
+    }
+
+    function sortByAlphabets() {
+      let filterArray = arr;
+
+      for (let i = 0; i < filterArray.length - 1; i++) {
+        for (let j = i; j < filterArray.length - i - 1; j++) {
+          if (filterArray[j].title > filterArray[j + 1].title) {
+            temp = filterArray[j];
+            filterArray[j] = filterArray[j + 1];
+            filterArray[j + 1] = temp;
+          }
+        }
+      }
+      console.log(filterArray);
+      for (let i = 0; i < filterArray.length; i++) {
+        document.getElementById('sortByAlphabets').innerHTML +=
+          '<div>' +
+          'Title: ' +
+          arr[i].title +
+          '<br />' +
+          'Body: ' +
+          '   ' +
+          arr[i].body +
+          '<br />';
+      }
+    }
+    function render() {
+      for (let i = 0; i < arr.length; i++) {
+        document.getElementById('noteData').innerHTML +=
+          '<div>' +
+          'Title: ' +
+          arr[i].title +
+          '<br />' +
+          'Body: ' +
+          '   ' +
+          arr[i].body +
+          '   ' +
+          '<button onclick="remove(' +
+          i +
+          ')" id="' +
+          i +
+          '">remove</button>' +
+          '<button onclick="edit(' +
+          i +
+          ')" id="' +
+          i +
+          '">edit</button>' +
+          '<div>';
+        +'<br />';
+      }
+    }
+  </script>
+</html>
