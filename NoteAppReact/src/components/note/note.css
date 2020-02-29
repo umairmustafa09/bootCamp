@@ -1,0 +1,44 @@
+.logIn {
+  border: 1px solid black;
+  border-radius: 5%;
+  padding: 20px;
+  margin: 20px;
+  font-size: 25px;
+  text-align: center;
+  width: 400px;
+  height: 400px;
+}
+.logIn > input {
+  background-color: #eae7e7;
+  border: 1px solid #cdcccc;
+  border-radius: 5px;
+  padding-left: 20px;
+  outline: none;
+  color: #909090;
+  height: 40px;
+  width: 300px;
+  margin-bottom: 10px;
+}
+.button {
+  background-color: teal;
+  height: 40px;
+  width: 250px;
+  margin: 10px;
+  color: white;
+  outline: none;
+  border-radius: 50px;
+  border: 1px solid teal;
+  font-weight: bold;
+}
+
+.btn {
+  background-color: teal;
+  height: 40px;
+  width: 250px;
+  margin: 10px;
+  color: white;
+  outline: none;
+  border-radius: 50px;
+  border: 1px solid teal;
+  font-weight: bold;
+}
