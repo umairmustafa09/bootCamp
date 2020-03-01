@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import note from './components/note/note';
 import { Route, BrowserRouter } from 'react-router-dom';
-import home from './components/home/home';
+
+import Note from './components/note/note';
+import Home from './components/home/home';
 
 export default class App extends Component {
   render() {
@@ -10,8 +11,9 @@ export default class App extends Component {
         <div>
           <center>
             <h1>Note App</h1>
-            <Route exact path="/" component={home} />
-            <Route path="/note" component={note} />
+            <Route exact path="/" component={Home} />
+            <Route path="/note" component={Note} />
+            <Route path="/update" component={Note} />
           </center>
         </div>
       </BrowserRouter>

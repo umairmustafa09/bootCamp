@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './home.css';
-
+import NoteService from './../../Services';
 export default class Home extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	state = {
-		notes:
-			JSON.parse(localStorage.getItem('Notes')) == null
-				? []
-				: JSON.parse(localStorage.getItem('Notes')),
+		notes: NoteService.getNotes,
 		sortedbyCreated: [],
 		sortedbyAlphabet: [],
 		searched: []
@@ -24,10 +17,10 @@ export default class Home extends Component {
 	};
 
 	edit = (index) => {
-		let value = window.prompt('Enter Changing in the body');
-		this.state.notes[index].body = value;
-		window.localStorage.setItem('Notes', JSON.stringify(this.state.notes));
-		window.location.reload();
+		this.props.history.push('/update', {
+			item: this.state.notes[index],
+			index
+		});
 	};
 
 	sortByCreated = () => {
@@ -63,7 +56,7 @@ export default class Home extends Component {
 	displaySearch = () => {
 		return this.state.searched.map((note, i) => {
 			return (
-				<div>
+				<div key={i}>
 					<p>
 						{note.title}
 						<br />
@@ -94,7 +87,7 @@ export default class Home extends Component {
 			<div>
 				<div className="noteContainer">
 					{this.state.notes.map((note, i) => (
-						<div id={i}>
+						<div key={i}>
 							<p>
 								{note.title} <br />
 								{note.body}

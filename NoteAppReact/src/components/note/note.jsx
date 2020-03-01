@@ -1,25 +1,40 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './note.css';
+import NoteService from './../../Services';
 
 export default class Note extends Component {
 	state = {
-		noteData:
-			JSON.parse(localStorage.getItem('Notes')) == null
-				? []
-				: JSON.parse(localStorage.getItem('Notes'))
+		title: '',
+		body: '',
+		isEditing: false,
+		noteData: NoteService.getNotes
 	};
 
+	componentDidMount() {
+		const { history } = this.props;
+		console.log(history.location);
+		if (history.location.state) {
+			this.setState({
+				title: history.location.state.item.title,
+				body: history.location.state.item.body,
+				isEditing: true
+			});
+		}
+	}
+
 	inputData = () => {
-		const title = document.getElementById('title').value;
-		const body = document.getElementById('body').value;
 		const note = {
-			title: title,
-			body: body,
+			title: this.state.title,
+			body: this.state.body,
 			Time: new Date()
 		};
-		this.state.noteData.push(note);
-		window.localStorage.setItem('Notes', JSON.stringify(this.state.noteData));
+		if (this.state.isEditing) {
+			this.state.noteData[this.props.history.location.state.index] = note;
+		} else {
+			this.state.noteData.push(note);
+		}
+		NoteService.setNotes = this.state.noteData;
 		alert('Note is created');
 	};
 
@@ -30,14 +45,22 @@ export default class Note extends Component {
 				<input
 					type="text"
 					name="title"
+					value={this.state.title}
 					placeholder="Enter a title"
 					id="title"
+					onChange={(e) => {
+						this.setState({ title: e.target.value });
+					}}
 				/>
 				<input
 					type="text"
 					name="body"
+					value={this.state.body}
 					placeholder="Enter a body text"
 					id="body"
+					onChange={(e) => {
+						this.setState({ body: e.target.value });
+					}}
 				/>
 				<button onClick={this.inputData} className="button">
 					Create Note
