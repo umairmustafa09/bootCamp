@@ -11,9 +11,9 @@ export default class Home extends Component {
 	};
 
 	remove = (index) => {
-		this.state.notes.splice(index, 1);
-		window.localStorage.setItem('Notes', JSON.stringify(this.state.notes));
-		window.location.reload();
+		const nar = this.state.notes.splice(index, 1); //notes after remove.
+		this.setState({ notes: nar });
+		console.log('nar', nar, 'index', index);
 	};
 
 	edit = (index) => {
