@@ -1,0 +1,6 @@
+#conversation-list {
+	grid-area: conversation-list;
+	background: rgb(3, 46, 46);
+	overflow-y: scroll;
+	border-radius: 20px;
+}
