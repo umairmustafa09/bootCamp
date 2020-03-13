@@ -6,10 +6,10 @@ import {
 	newMessageAdded,
 	conversationDeleted
 } from '../../store/actions';
-import ConversationList from '../../components/conversation/conversation-list/ConversationList';
-import ChatTitle from '../../components/chat-title/ChatTitle';
-import MessageList from '../../components/message/MessageList';
-import ChatForm from '../../components/chat-form/Chat-Form';
+import ConversationList from '../../components/chat/conversation/conversation-list/ConversationList';
+import ChatTitle from '../../components/chat/chat-title/ChatTitle';
+import MessageList from '../../components/chat/message/MessageList';
+import ChatForm from '../../components/chat/chat-form/Chat-Form';
 
 import './ChatShell.css';
 

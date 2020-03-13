@@ -7,7 +7,7 @@ const ChatTitle = ({ selectedConversation, onDeleteConversation }) => {
 		<div id="chat-title">
 			<span>{selectedConversation.title}</span>
 			<img
-				src={require('../../images/icons/trash-logo.svg')}
+				src={require('../../../images/icons/trash-logo.svg')}
 				alt="Delete Conversation"
 				onClick={() => {
 					onDeleteConversation();

@@ -1,11 +1,9 @@
 import React from 'react';
 
-import ChatShell from './containers/shell/ChatShell';
+import Routes from './routes';
 
 const App = () => {
-  return (
-    <ChatShell />
-  );
-}
+	return <Routes />;
+};
 
 export default App;
