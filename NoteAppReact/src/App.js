@@ -1,22 +1,15 @@
-import React, { Component } from 'react';
-import { Route, BrowserRouter } from 'react-router-dom';
+import React, { Component } from "react";
+import { Provider } from "react-redux";
 
-import Note from './components/note/note';
-import Home from './components/home/home';
+import Routes from "./routes";
+import store from "./store";
 
 export default class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <center>
-            <h1>Note App</h1>
-            <Route exact path="/" component={Home} />
-            <Route path="/note" component={Note} />
-            <Route path="/update" component={Note} />
-          </center>
-        </div>
-      </BrowserRouter>
+      <Provider store={store}>
+        <Routes />
+      </Provider>
     );
   }
 }
