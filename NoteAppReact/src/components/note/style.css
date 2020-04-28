@@ -29,6 +29,7 @@ textarea {
 }
 
 .button {
+  right: 50px;
   background-color: teal;
   height: 40px;
   width: 250px;

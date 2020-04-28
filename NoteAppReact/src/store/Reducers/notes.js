@@ -4,7 +4,7 @@ const INITIAL_STATE = {
   notes: []
 };
 
-function addNotes(state = INITIAL_STATE, action) {
+function noteReduer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case ActionTypes.ADD_NOTE: {
       return {
@@ -18,4 +18,4 @@ function addNotes(state = INITIAL_STATE, action) {
   }
 }
 
-export default addNotes;
+export default noteReduer;

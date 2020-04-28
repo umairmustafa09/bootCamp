@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import NotesAction from "../../store/Actions";
-import "./index.css";
+import NotesAction from "../../store/Actions/notes";
+import "./style.css";
 
 class Note extends Component {
   state = {
@@ -69,7 +69,7 @@ class Note extends Component {
         <button onClick={this.inputData} className="button">
           Create Note
         </button>
-        <Link to="/">
+        <Link to="/Home">
           <button className="button">Go Back</button>
         </Link>
       </div>
@@ -79,7 +79,7 @@ class Note extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    notes: state.notes
+    notes: state.noteReducer.notes
   };
 };
 

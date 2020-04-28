@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import "./index.css";
+import "./style.css";
 
 class Home extends Component {
   state = {
     notes: this.props.notes || [],
+    user: this.props.user || {},
     searched: []
   };
 
@@ -96,7 +97,8 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    notes: state.notes
+    notes: state.noteReducer.notes,
+    user: state.userReducer.obj
   };
 };
 

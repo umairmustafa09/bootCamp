@@ -1,9 +1,11 @@
-import { applyMiddleware, createStore } from "redux";
+import { applyMiddleware, combineReducers, createStore } from "redux";
 import thunk from "redux-thunk";
 
-import addNotes from "./Reducers";
+import noteReducer from "./Reducers/notes";
+import userReducer from "./Reducers/user";
 
 const middleware = applyMiddleware(thunk);
-let store = createStore(addNotes, middleware);
+const rootReducer = combineReducers({ noteReducer, userReducer });
+let store = createStore(rootReducer, middleware);
 
 export default store;
