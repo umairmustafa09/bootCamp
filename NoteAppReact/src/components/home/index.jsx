@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
+import NotesAction from "../../store/Actions/notes";
 import "./style.css";
 
 class Home extends Component {
   state = {
-    notes: this.props.notes || [],
+    notes: this.props.notes.Notes || [],
     user: this.props.user || {},
     searched: []
   };
@@ -31,6 +32,19 @@ class Home extends Component {
     });
     this.setState({ searched: notes });
   };
+
+  componentDidMount() {
+    const user = this.props.user;
+    if (user) this.props.getNote();
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.notes !== state.notes) {
+      return {
+        notes: props.notes.Notes || []
+      };
+    }
+  }
 
   renderNotes = () => {
     return this.state.notes.map((note, i) => (
@@ -95,11 +109,20 @@ class Home extends Component {
   }
 }
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getNote: () => {
+      dispatch(NotesAction.Get());
+    }
+  };
+};
+
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
     notes: state.noteReducer.notes,
     user: state.userReducer.obj
   };
 };
 
-export default connect(mapStateToProps, null)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

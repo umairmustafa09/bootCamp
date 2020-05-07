@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter } from "react-router-dom";
+import { Route, BrowserRouter, Redirect } from "react-router-dom";
 
 import Note from "../components/note";
 import Home from "../components/home";
@@ -13,11 +13,14 @@ export default class Routes extends Component {
         <div>
           <center>
             <h1>Note App</h1>
+            <Route exact path="/home" component={Home} />
             <Route exact path="/" component={SignIn} />
-            <Route exact path="/Signup" component={SignUp} />
-            <Route exact path="/Home" component={Home} />
-            <Route path="/note" component={Note} />
-            <Route path="/update" component={Note} />
+            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/note" component={Note} />
+            <Route exact path="/update" component={Note} />
+            <Route exact path="*">
+              <Redirect to="/" />
+            </Route>
           </center>
         </div>
       </BrowserRouter>

@@ -2,20 +2,40 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import NotesAction from "../../store/Actions/user";
+import UserAction from "../../store/Actions/user";
 import "./style.css";
 
 class SignIn extends Component {
   state = {
-    username: "",
-    password: ""
+    email: "",
+    password: "",
+    loginMsg: " "
   };
 
   input = () => {
-    const username = this.state.username;
+    const email = this.state.email;
     const password = this.state.password;
-    this.props.login({ username, password });
+    this.props.login({ email, password });
   };
+
+  navToHome = () => {
+    const user = this.props.loginUser;
+    if (!user) {
+      if (user.obj.message === "Successfully Login") {
+        this.props.history.push("/home");
+      }
+    }
+  };
+
+  componentDidUpdate = () => {
+    this.navToHome();
+  };
+
+  static getDerivedStateFromProps(props) {
+    return {
+      loginMsg: props.loginUser.obj.message
+    };
+  }
 
   render() {
     return (
@@ -23,9 +43,9 @@ class SignIn extends Component {
         <h1>Log in</h1>
         <input
           type="text"
-          name="username"
-          placeholder="Username"
-          onChange={(e) => this.setState({ username: e.target.value })}
+          name="email"
+          placeholder="email"
+          onChange={(e) => this.setState({ email: e.target.value })}
         />
         <input
           type="password"
@@ -33,23 +53,28 @@ class SignIn extends Component {
           placeholder="Password"
           onChange={(e) => this.setState({ password: e.target.value })}
         />
-        <Link to="/home">
-          <button onClick={this.input}>Sign in</button>
-        </Link>
+        <button onClick={this.input}>Sign in</button>
         <Link to="/signup">
-          <button onClick={this.input}>Create Account</button>
+          <button>Create Account</button>
         </Link>
+        <p className="msg">{this.state.loginMsg}</p>
       </div>
     );
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    loginUser: state.userReducer
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     login: (obj) => {
-      dispatch(NotesAction.Login(obj));
+      dispatch(UserAction.Login(obj));
     }
   };
 };
 
-export default connect(null, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

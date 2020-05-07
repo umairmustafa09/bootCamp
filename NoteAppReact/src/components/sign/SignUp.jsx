@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import NotesAction from "../../store/Actions/user";
+import UserAction from "../../store/Actions/user";
 import "./style.css";
 
 class SignUp extends Component {
@@ -11,7 +10,8 @@ class SignUp extends Component {
     password: "",
     firstName: "",
     lastName: "",
-    email: ""
+    email: "",
+    SignUpMsg: ""
   };
 
   input = () => {
@@ -20,8 +20,33 @@ class SignUp extends Component {
     const firstName = this.state.firstName;
     const lastName = this.state.lastName;
     const email = this.state.email;
-    this.props.signup({ username, password, email, firstName, lastName });
+    this.props.signup({
+      username,
+      password,
+      email,
+      firstName,
+      lastName
+    });
   };
+
+  navToLogin = () => {
+    const user = this.props.SignUpUser;
+    if (user) {
+      if (user.obj.message === "Successfully Signup. Please login!") {
+        this.props.history.goBack();
+      }
+    }
+  };
+
+  componentDidUpdate = () => {
+    this.navToLogin();
+  };
+
+  static getDerivedStateFromProps(props) {
+    return {
+      SignUpMsg: props.SignUpUser.obj.message
+    };
+  }
 
   render() {
     return (
@@ -57,20 +82,25 @@ class SignUp extends Component {
           placeholder="Password"
           onChange={(e) => this.setState({ password: e.target.value })}
         />
-        <Link to="/">
-          <button onClick={this.input}>Sign up</button>
-        </Link>
+        <button onClick={this.input}>Sign up</button>
+        <p className="msg">{this.state.SignUpMsg}</p>
       </div>
     );
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    SignUpUser: state.userReducer
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     signup: (obj) => {
-      dispatch(NotesAction.Signup(obj));
+      dispatch(UserAction.Signup(obj));
     }
   };
 };
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

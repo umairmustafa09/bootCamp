@@ -69,7 +69,7 @@ class Note extends Component {
         <button onClick={this.inputData} className="button">
           Create Note
         </button>
-        <Link to="/Home">
+        <Link to="/home">
           <button className="button">Go Back</button>
         </Link>
       </div>
