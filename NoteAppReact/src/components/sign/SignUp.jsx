@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import UserAction from "../../store/Actions/user";
+import isLoggedIn from "../../helper/is_logged_in";
 import "./style.css";
 
 class SignUp extends Component {
@@ -27,6 +29,12 @@ class SignUp extends Component {
       firstName,
       lastName
     });
+  };
+
+  componentDidMount = () => {
+    if (isLoggedIn()) {
+      return this.props.history.push("/");
+    }
   };
 
   navToLogin = () => {
@@ -83,7 +91,10 @@ class SignUp extends Component {
           onChange={(e) => this.setState({ password: e.target.value })}
         />
         <button onClick={this.input}>Sign up</button>
-        <p className="msg">{this.state.SignUpMsg}</p>
+        <Link to="/login">
+          <button>Go Back</button>
+        </Link>
+        <h4 className="msg">{this.state.SignUpMsg}</h4>
       </div>
     );
   }

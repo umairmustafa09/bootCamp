@@ -18,6 +18,12 @@ function userReducer(state = INITIAL_STATE, action) {
         obj: action.payload
       };
     }
+    case ActionTypes.LOGOUT_USER: {
+      return {
+        ...state,
+        obj: {}
+      };
+    }
 
     default:
       return state;

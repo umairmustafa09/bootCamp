@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import UserAction from "../../store/Actions/user";
+import isLoggedIn from "../../helper/is_logged_in";
+import store from "store";
 import "./style.css";
 
 class SignIn extends Component {
@@ -22,6 +24,7 @@ class SignIn extends Component {
     const user = this.props.loginUser;
     if (user) {
       if (user.obj.message === "Successfully Login") {
+        store.set("loggedIn", true);
         this.props.history.push("/home");
       }
     }
@@ -29,6 +32,12 @@ class SignIn extends Component {
 
   componentDidUpdate = () => {
     this.navToHome();
+  };
+
+  componentDidMount = () => {
+    if (isLoggedIn()) {
+      return this.props.history.push("/");
+    }
   };
 
   static getDerivedStateFromProps(props) {
@@ -57,7 +66,7 @@ class SignIn extends Component {
         <Link to="/signup">
           <button>Create Account</button>
         </Link>
-        <p className="msg">{this.state.loginMsg}</p>
+        <h4 className="msg">{this.state.loginMsg}</h4>
       </div>
     );
   }

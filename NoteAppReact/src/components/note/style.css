@@ -29,7 +29,7 @@ textarea {
 }
 
 .button {
-  right: 50px;
+  right: 60px;
   background-color: teal;
   height: 40px;
   width: 250px;
@@ -51,4 +51,10 @@ textarea {
   border-radius: 50px;
   border: 1px solid teal;
   font-weight: bold;
+}
+
+.noteMsg {
+  font-family: Arial, Helvetica, sans-serif;
+  margin-top: 200px;
+  color: teal;
 }

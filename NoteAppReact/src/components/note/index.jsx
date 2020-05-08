@@ -3,43 +3,60 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import NotesAction from "../../store/Actions/notes";
+import isLoggedIn from "../../helper/is_logged_in";
 import "./style.css";
 
 class Note extends Component {
   state = {
     title: "",
     body: "",
+    userid: "",
+    _id: "",
+    updatedAt: "",
     isEditing: false,
-    noteData: this.props.notes || []
+    noteData: this.props.notes || [],
+    user: this.props.user || {},
+    noteMsg: ""
   };
 
   componentDidMount() {
+    if (!isLoggedIn()) {
+      return this.props.history.push("/login");
+    }
+
     const { history } = this.props;
     if (history.location.state) {
       this.setState({
+        _id: history.location.state.item._id,
         title: history.location.state.item.title,
         body: history.location.state.item.body,
+        userid: history.location.state.item.userid,
         isEditing: true
       });
     }
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.noteMsg !== state.noteMsg) {
+      return {
+        noteMsg: props.notes.error
+          ? props.notes.error
+          : props.notes.message || ""
+      };
+    }
+  }
+
   inputData = () => {
     const note = {
+      _id: this.state._id,
+      userid: this.state.userid || this.props.user.data.user._id,
       title: this.state.title,
       body: this.state.body,
-      Time: new Date()
+      updatedAt: new Date()
     };
-    if (this.state.isEditing) {
-      const index = this.props.history.location.state.index;
-      const data = this.state.noteData;
-      data[index] = note;
-      this.setState({ noteData: data });
-    } else {
-      this.state.noteData.push(note);
-    }
-    this.props.addNote(this.state.noteData);
-    alert("Note is created");
+    this.state.isEditing
+      ? this.props.updateNote(note)
+      : this.props.addNote(note);
   };
 
   render() {
@@ -72,6 +89,7 @@ class Note extends Component {
         <Link to="/home">
           <button className="button">Go Back</button>
         </Link>
+        <h4 className="noteMsg">{this.state.noteMsg}</h4>
       </div>
     );
   }
@@ -79,7 +97,8 @@ class Note extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    notes: state.noteReducer.notes
+    notes: state.noteReducer.notes,
+    user: state.userReducer.obj
   };
 };
 
@@ -87,6 +106,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     addNote: (notes) => {
       dispatch(NotesAction.Add(notes));
+    },
+    updateNote: (note) => {
+      dispatch(NotesAction.Update(note));
     }
   };
 };

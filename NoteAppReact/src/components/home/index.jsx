@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import NotesAction from "../../store/Actions/notes";
+import UserAction from "../../store/Actions/user";
+import isLoggedIn from "../../helper/is_logged_in";
+import store from "store";
 import "./style.css";
 
 class Home extends Component {
@@ -10,13 +13,46 @@ class Home extends Component {
     notes: this.props.notes.Notes || [],
     user: this.props.user || {},
     searched: [],
-    userName: ""
+    userName: "",
+    isSearchEnabel: false
+  };
+
+  componentDidMount = () => {
+    if (!isLoggedIn()) {
+      return this.props.history.push("/login");
+    }
+
+    const data = this.props.user.data;
+    if (data) {
+      this.props.getNote(data.user._id);
+      this.setState({
+        userName: `${data.user.firstName} ${data.user.lastName}`
+      });
+    } else {
+      store.remove("loggedIn");
+      this.props.history.push("/login");
+    }
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.notes !== state.notes) {
+      return {
+        notes: props.notes.Notes || []
+      };
+    }
+  }
+
+  handleLogout = () => {
+    store.remove("loggedIn");
+    this.props.logoutUser();
+    this.props.history.push("/login");
   };
 
   remove = (index) => {
-    this.state.notes.splice(index, 1);
+    const note = this.state.notes.splice(index, 1);
     const afterDel = this.state.notes;
     this.setState({ notes: afterDel });
+    this.props.deleteNote(note[0]._id);
   };
 
   edit = (index) => {
@@ -27,30 +63,16 @@ class Home extends Component {
   };
 
   search = (e) => {
-    const notes = this.state.notes.filter((notes) => {
-      const regex = new RegExp(e.target.value, "gi");
-      return notes.title.match(regex);
-    });
-    this.setState({ searched: notes });
-  };
-
-  componentDidMount() {
-    const user = this.props.user;
-    if (user) {
-      this.props.getNote(this.props.user.data.user._id);
-      this.setState({
-        userName: `${user.data.user.firstName} ${user.data.user.lastName}`
+    try {
+      const notes = this.state.notes.filter((notes) => {
+        const regex = new RegExp(e.target.value, "gi");
+        return notes.title.match(regex);
       });
+      this.setState({ searched: notes, isSearchEnabel: true });
+    } catch (e) {
+      return [];
     }
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    if (props.notes !== state.notes) {
-      return {
-        notes: props.notes.Notes || []
-      };
-    }
-  }
+  };
 
   renderNotes = () => {
     return this.state.notes.map((note, i) => (
@@ -83,9 +105,23 @@ class Home extends Component {
       return (
         <div key={i}>
           <p>
-            {note.title}
-            <br />
+            {note.title} <br />
             {note.body}
+            <br />
+            <button
+              onClick={() => {
+                this.edit(i);
+              }}
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => {
+                this.remove(i);
+              }}
+            >
+              Delete
+            </button>
           </p>
         </div>
       );
@@ -95,14 +131,10 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <p className="userMsg">Happy Noting {this.state.userName}</p>
-        <div className="noteContainer">{this.renderNotes()}</div>
-        <div className="container">
-          <Link to="/note">
-            <button>Create Note</button>
-          </Link>
-        </div>
-
+        <h3 className="userMsg">Happy Noting {this.state.userName}</h3>
+        <button className="logout" onClick={this.handleLogout}>
+          log out {this.state.userName}
+        </button>
         <div className="container">
           <input
             type="text"
@@ -111,7 +143,17 @@ class Home extends Component {
             onChange={this.search}
           />
         </div>
+        <div className="container">
+          <Link to="/note">
+            <button>Create Note</button>
+          </Link>
+        </div>
         <div className="noteContainer">{this.displaySearch()}</div>
+        {this.state.isSearchEnabel ? (
+          <div />
+        ) : (
+          <div className="noteContainer">{this.renderNotes()}</div>
+        )}
       </div>
     );
   }
@@ -121,6 +163,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getNote: (_id) => {
       dispatch(NotesAction.GetUserNotes(_id));
+    },
+    deleteNote: (_id) => {
+      dispatch(NotesAction.Delete(_id));
+    },
+    logoutUser: () => {
+      dispatch(UserAction.Logout());
     }
   };
 };

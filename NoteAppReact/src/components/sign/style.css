@@ -30,6 +30,7 @@ button {
   margin-top: 10px;
   border: 1px solid white;
   font-weight: bold;
+  margin-right: 10px;
 }
 .signInUp > p {
   float: left;
@@ -51,5 +52,5 @@ p > a {
 .msg {
   font-family: Arial, Helvetica, sans-serif;
   margin-top: 80px;
-  color: red;
+  color: teal;
 }

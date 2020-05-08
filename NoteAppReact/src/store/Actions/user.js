@@ -30,6 +30,7 @@ const UserAction = {
         });
     };
   },
+
   Login: function (obj) {
     return (dispatch) => {
       const url = process.env.REACT_APP_ENDPOINT + "auth/signin";
@@ -60,6 +61,11 @@ const UserAction = {
             });
           }
         });
+    };
+  },
+  Logout: function () {
+    return (dispatch) => {
+      dispatch({ type: ActionTypes.LOGOUT_USER, payload: {} });
     };
   }
 };
