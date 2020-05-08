@@ -9,7 +9,8 @@ class Home extends Component {
   state = {
     notes: this.props.notes.Notes || [],
     user: this.props.user || {},
-    searched: []
+    searched: [],
+    userName: ""
   };
 
   remove = (index) => {
@@ -35,7 +36,12 @@ class Home extends Component {
 
   componentDidMount() {
     const user = this.props.user;
-    if (user) this.props.getNote();
+    if (user) {
+      this.props.getNote(this.props.user.data.user._id);
+      this.setState({
+        userName: `${user.data.user.firstName} ${user.data.user.lastName}`
+      });
+    }
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -89,12 +95,14 @@ class Home extends Component {
   render() {
     return (
       <div>
+        <p className="userMsg">Happy Noting {this.state.userName}</p>
         <div className="noteContainer">{this.renderNotes()}</div>
         <div className="container">
           <Link to="/note">
             <button>Create Note</button>
           </Link>
         </div>
+
         <div className="container">
           <input
             type="text"
@@ -111,14 +119,13 @@ class Home extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getNote: () => {
-      dispatch(NotesAction.Get());
+    getNote: (_id) => {
+      dispatch(NotesAction.GetUserNotes(_id));
     }
   };
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     notes: state.noteReducer.notes,
     user: state.userReducer.obj

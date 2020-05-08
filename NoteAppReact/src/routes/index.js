@@ -14,8 +14,8 @@ export default class Routes extends Component {
           <center>
             <h1>Note App</h1>
             <Route exact path="/home" component={Home} />
-            <Route exact path="/" component={SignIn} />
             <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/" component={SignIn} />
             <Route exact path="/note" component={Note} />
             <Route exact path="/update" component={Note} />
             <Route exact path="*">

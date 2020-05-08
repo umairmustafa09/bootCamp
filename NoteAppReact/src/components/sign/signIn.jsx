@@ -20,7 +20,7 @@ class SignIn extends Component {
 
   navToHome = () => {
     const user = this.props.loginUser;
-    if (!user) {
+    if (user) {
       if (user.obj.message === "Successfully Login") {
         this.props.history.push("/home");
       }

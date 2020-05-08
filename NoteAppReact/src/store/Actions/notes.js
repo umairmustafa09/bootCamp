@@ -5,10 +5,10 @@ const NotesAction = {
     return (dispatch) =>
       dispatch({ type: ActionTypes.ADD_NOTE, payload: notes });
   },
-  Get: function () {
+  GetUserNotes: function (_id) {
     return (dispatch, getState) => {
       const token = getState().userReducer.obj.data.token;
-      const url = process.env.REACT_APP_GET_NOTE_API;
+      const url = process.env.REACT_APP_ENDPOINT + "api/note/user/" + _id;
       fetch(url, {
         method: "GET",
         headers: {

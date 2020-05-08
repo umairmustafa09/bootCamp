@@ -3,7 +3,7 @@ import ActionTypes from "./ActionTypes";
 const UserAction = {
   Signup: function (obj) {
     return (dispatch) => {
-      let url = process.env.REACT_APP_SIGNUP_API;
+      let url = process.env.REACT_APP_ENDPOINT + "auth/signup";
       return fetch(url, {
         method: "POST",
         headers: {
@@ -17,6 +17,9 @@ const UserAction = {
           }
           throw resposne;
         })
+        .then((data) => {
+          dispatch({ type: ActionTypes.SIGNUP_USER, payload: data });
+        })
         .catch((error) => {
           if (typeof error.text === "function") {
             error.text().then((errorMessage) => {
@@ -29,7 +32,7 @@ const UserAction = {
   },
   Login: function (obj) {
     return (dispatch) => {
-      const url = process.env.REACT_APP_LOGIN_API;
+      const url = process.env.REACT_APP_ENDPOINT + "auth/signin";
       fetch(url, {
         method: "POST",
         headers: {
