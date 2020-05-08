@@ -22,6 +22,11 @@ class Note extends Component {
   componentDidMount() {
     if (!isLoggedIn()) {
       return this.props.history.push("/login");
+    } else {
+      const data = this.state.user.data;
+      if (!data) {
+        return this.props.history.push("/dashboard");
+      }
     }
 
     const { history } = this.props;

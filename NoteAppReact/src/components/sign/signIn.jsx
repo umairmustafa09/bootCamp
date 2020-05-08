@@ -25,7 +25,9 @@ class SignIn extends Component {
     if (user) {
       if (user.obj.message === "Successfully Login") {
         store.set("loggedIn", true);
-        this.props.history.push("/home");
+        user.obj.data.user.role === "S"
+          ? this.props.history.push("/home")
+          : this.props.history.push("/dashboard");
       }
     }
   };
@@ -35,8 +37,16 @@ class SignIn extends Component {
   };
 
   componentDidMount = () => {
-    if (isLoggedIn()) {
-      return this.props.history.push("/");
+    const data = this.props.loginUser.data;
+    if (data) {
+      if (isLoggedIn()) {
+        return this.props.loginUser.obj.data.user.role === "S"
+          ? this.props.history.push("/home")
+          : this.props.history.push("/dashboard");
+      }
+    } else {
+      store.remove("loggedIn");
+      this.props.history.push("/login");
     }
   };
 

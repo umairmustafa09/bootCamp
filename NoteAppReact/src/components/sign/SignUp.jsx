@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import UserAction from "../../store/Actions/user";
-import isLoggedIn from "../../helper/is_logged_in";
 import "./style.css";
 
 class SignUp extends Component {
@@ -29,12 +28,6 @@ class SignUp extends Component {
       firstName,
       lastName
     });
-  };
-
-  componentDidMount = () => {
-    if (isLoggedIn()) {
-      return this.props.history.push("/");
-    }
   };
 
   navToLogin = () => {

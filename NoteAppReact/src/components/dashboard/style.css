@@ -1,0 +1,17 @@
+.userMsg {
+  font-family: Arial, Helvetica, sans-serif;
+  color: teal;
+}
+
+.logout {
+  float: left;
+  background-color: rgb(71, 133, 133);
+  border: 1px solid rgb(71, 133, 133);
+  left: 40px;
+  bottom: 90px;
+}
+
+.chart {
+  width: 60%;
+  height: 60%;
+}
