@@ -4,6 +4,7 @@ import { Bar } from "react-chartjs-2";
 
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
+import moment from "moment";
 import store from "store";
 import "./style.css";
 
@@ -12,46 +13,22 @@ class Dashboard extends Component {
     user: this.props.user || {},
     notes: this.props.notes.Notes || [],
     userName: "",
-    labels: {
-      jan: 0,
-      feb: 0,
-      march: 0,
-      april: 0,
-      may: 0,
-      june: 0,
-      july: 0,
-      aug: 0,
-      sep: 0,
-      oct: 0,
-      nov: 0,
-      dec: 0
-    },
-
-    NotesData: {
-      labels: [
-        "Jan",
-        "Feb",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "Aug",
-        "Sempt",
-        "Oct",
-        "Nov",
-        "Dec"
-      ],
-      datasets: [
-        {
-          label: "Notes",
-          backgroundColor: "rgba(75, 192, 192, 1)",
-          borderColor: "rgba(0,0,0,1)",
-          borderWidth: 2,
-          data: [65, 59, 80, 81, 56]
-        }
-      ]
-    }
+    noteMonths: new Array(12).fill(0),
+    notesData: "",
+    labels: [
+      "Jan",
+      "Feb",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "Aug",
+      "Sempt",
+      "Oct",
+      "Nov",
+      "Dec"
+    ]
   };
 
   componentDidMount = () => {
@@ -69,8 +46,29 @@ class Dashboard extends Component {
 
   static getDerivedStateFromProps(props, state) {
     if (props.notes !== state.notes) {
+      const notes = props.notes.Notes;
+      if (notes) {
+        props.notes.Notes.forEach((note) => {
+          const timeObject = moment(note.createdAt).toObject();
+          const month = Number(timeObject.months);
+          state.noteMonths[month] = state.noteMonths[month] + 1;
+        });
+      }
       return {
-        notes: props.notes.Notes || []
+        notes: props.notes.Notes || [],
+        notesData: {
+          labels: state.labels,
+          datasets: [
+            {
+              label: "Notes",
+              backgroundColor: "rgba(75,192,192,1)",
+              borderColor: "rgba(0,0,0,1)",
+              borderWidth: 2,
+              data: state.noteMonths
+            }
+          ]
+        },
+        noteMonths: state.noteMonths
       };
     }
   }
@@ -84,13 +82,13 @@ class Dashboard extends Component {
   render() {
     return (
       <div>
-        <h3 className="userMsg">Admin {this.state.userName} Dashboard</h3>
+        <h3 className="userMsg">Admin Dashboard: {this.state.userName}</h3>
         <button className="logout" onClick={this.handleLogout}>
           log out {this.state.userName}
         </button>
         <div className="chart">
           <Bar
-            data={this.state.NotesData}
+            data={this.state.notesData}
             options={{
               title: {
                 display: true,
@@ -121,7 +119,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     user: state.userReducer.obj,
     notes: state.noteReducer.notes
