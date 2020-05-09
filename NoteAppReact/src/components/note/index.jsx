@@ -12,6 +12,7 @@ class Note extends Component {
     title: "",
     body: "",
     userid: "",
+    email: "",
     _id: "",
     updatedAt: "",
     isEditing: false,
@@ -38,6 +39,7 @@ class Note extends Component {
         title: history.location.state.item.title,
         body: history.location.state.item.body,
         userid: history.location.state.item.userid,
+        email: history.location.state.item.email,
         isEditing: true
       });
     }
@@ -57,6 +59,7 @@ class Note extends Component {
     const note = {
       _id: this.state._id,
       userid: this.state.userid || this.props.user.data.user._id,
+      email: this.state.email || this.props.user.data.user.email,
       title: this.state.title,
       body: this.state.body,
       updatedAt: new Date()

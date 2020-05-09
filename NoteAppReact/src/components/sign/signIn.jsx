@@ -12,7 +12,7 @@ class SignIn extends Component {
   state = {
     email: "",
     password: "",
-    loginMsg: " "
+    loginMsg: ""
   };
 
   input = () => {
@@ -53,7 +53,9 @@ class SignIn extends Component {
 
   static getDerivedStateFromProps(props) {
     return {
-      loginMsg: props.loginUser.obj.message
+      loginMsg: props.loginUser.obj.error
+        ? props.loginUser.obj.error
+        : props.loginUser.obj.message || ""
     };
   }
 
@@ -73,7 +75,7 @@ class SignIn extends Component {
     } else {
       return (
         <Alert className="MsgClass" variant="info">
-          Please login in
+          Please login
         </Alert>
       );
     }
@@ -107,7 +109,7 @@ class SignIn extends Component {
               variant="info"
               onClick={this.input}
             >
-              Login In
+              Log in
             </Button>
             <Link to="/signup">
               <Button className="margin-right" variant="info">

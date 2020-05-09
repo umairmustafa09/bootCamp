@@ -67,10 +67,10 @@ const NotesAction = {
     };
   },
 
-  GetUserNotes: function (_id) {
+  GetUserNotes: function (email) {
     return (dispatch, getState) => {
       const token = getState().userReducer.obj.data.token;
-      const url = process.env.REACT_APP_ENDPOINT + "api/note/user/" + _id;
+      const url = process.env.REACT_APP_ENDPOINT + "api/user/note/" + email;
       fetch(url, {
         method: "GET",
         headers: {

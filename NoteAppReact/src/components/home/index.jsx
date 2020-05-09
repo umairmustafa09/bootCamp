@@ -25,7 +25,7 @@ class Home extends Component {
 
     const data = this.props.user.data;
     if (data) {
-      this.props.getNote(data.user._id);
+      this.props.getNote(data.user.email);
       this.setState({
         userName: `${data.user.firstName} ${data.user.lastName}`
       });
@@ -50,8 +50,11 @@ class Home extends Component {
   };
 
   remove = (index) => {
-    const note = this.state.notes.splice(index, 1);
-    const afterDel = this.state.notes;
+    const notes = this.state.searched
+      ? this.state.searched
+      : this.state.users.notes;
+    const note = notes.splice(index, 1);
+    const afterDel = notes;
     this.setState({ notes: afterDel });
     this.props.deleteNote(note[0]._id);
   };
@@ -181,8 +184,8 @@ class Home extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getNote: (_id) => {
-      dispatch(NotesAction.GetUserNotes(_id));
+    getNote: (email) => {
+      dispatch(NotesAction.GetUserNotes(email));
     },
     deleteNote: (_id) => {
       dispatch(NotesAction.Delete(_id));

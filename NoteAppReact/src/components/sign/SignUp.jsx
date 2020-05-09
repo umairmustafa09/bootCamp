@@ -46,7 +46,9 @@ class SignUp extends Component {
 
   static getDerivedStateFromProps(props) {
     return {
-      SignUpMsg: props.SignUpUser.obj.message
+      SignUpMsg: props.SignUpUser.obj.error
+        ? props.SignUpUser.obj.error
+        : props.SignUpUser.obj.message || ""
     };
   }
 

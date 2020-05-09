@@ -86,9 +86,11 @@ class Dashboard extends Component {
   };
 
   remove = (index) => {
-    const user = this.state.users;
-    const userToDelete = user.data.user.splice(index, 1);
-    const afterDel = user;
+    const users = this.state.searched
+      ? this.state.searched
+      : this.state.users.data.user;
+    const userToDelete = users.splice(index, 1);
+    const afterDel = users;
     this.setState({ users: afterDel });
     this.props.deleteUser(userToDelete[0]._id);
   };
