@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Card, Button, Form, Alert } from "react-bootstrap";
 
 import NotesAction from "../../store/Actions/notes";
 import isLoggedIn from "../../helper/is_logged_in";
-import "./style.css";
+import "../style.css";
 
 class Note extends Component {
   state = {
@@ -16,7 +17,8 @@ class Note extends Component {
     isEditing: false,
     noteData: this.props.notes || [],
     user: this.props.user || {},
-    noteMsg: ""
+    noteMsg: "",
+    currentPath: this.props.history.location.pathname.substr(1)
   };
 
   componentDidMount() {
@@ -64,37 +66,79 @@ class Note extends Component {
       : this.props.addNote(note);
   };
 
+  backenMsg = () => {
+    if (
+      this.state.noteMsg === "Note updated Successfully" ||
+      this.state.noteMsg === "Note created Succesfully"
+    ) {
+      return (
+        <Alert className="MsgClass" variant="success">
+          {this.state.noteMsg}
+        </Alert>
+      );
+    } else if (this.state.noteMsg) {
+      return (
+        <Alert className="MsgClass" variant="danger">
+          {this.state.noteMsg}
+        </Alert>
+      );
+    } else {
+      return (
+        <Alert className="MsgClass" variant="info">
+          Please {this.state.currentPath} Note
+        </Alert>
+      );
+    }
+  };
+
   render() {
     return (
-      <div className="logIn">
-        <h1>Create Note</h1>
-        <input
-          type="text"
-          name="title"
-          value={this.state.title}
-          placeholder="Enter a title"
-          id="title"
-          onChange={(e) => {
-            this.setState({ title: e.target.value });
-          }}
-        />
-        <textarea
-          type="text"
-          name="body"
-          value={this.state.body}
-          placeholder="Enter a body text"
-          id="body"
-          onChange={(e) => {
-            this.setState({ body: e.target.value });
-          }}
-        />
-        <button onClick={this.inputData} className="button">
-          Create Note
-        </button>
-        <Link to="/home">
-          <button className="button">Go Back</button>
-        </Link>
-        <h4 className="noteMsg">{this.state.noteMsg}</h4>
+      <div>
+        <h1>Note App</h1>
+        <Card className="text-left FormClass">
+          <Card.Header>
+            <h3>{this.state.currentPath} Note</h3>
+          </Card.Header>
+          <Card.Body>
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              name="title"
+              value={this.state.title}
+              placeholder="Enter a title"
+              id="title"
+              onChange={(e) => {
+                this.setState({ title: e.target.value });
+              }}
+            />
+            <Form.Label>Body</Form.Label>
+            <Form.Control
+              as="textarea"
+              type="text"
+              name="body"
+              value={this.state.body}
+              placeholder="Enter a body text"
+              id="body"
+              onChange={(e) => {
+                this.setState({ body: e.target.value });
+              }}
+            />
+            <Link to="/home">
+              <Button className="margin-right" variant="info">
+                Go Back
+              </Button>
+            </Link>
+
+            <Button
+              className="margin-right"
+              variant="info"
+              onClick={this.inputData}
+            >
+              {this.state.currentPath} Note
+            </Button>
+            {this.backenMsg()}
+          </Card.Body>
+        </Card>
       </div>
     );
   }

@@ -63,6 +63,7 @@ const UserAction = {
         });
     };
   },
+
   Logout: function () {
     return (dispatch) => {
       dispatch({ type: ActionTypes.LOGOUT_USER, payload: {} });

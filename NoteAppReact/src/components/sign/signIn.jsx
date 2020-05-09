@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Card, Button, Form, Alert } from "react-bootstrap";
 
 import UserAction from "../../store/Actions/user";
 import isLoggedIn from "../../helper/is_logged_in";
 import store from "store";
-import "./style.css";
+import "../style.css";
 
 class SignIn extends Component {
   state = {
@@ -56,27 +57,66 @@ class SignIn extends Component {
     };
   }
 
+  backenMsg = () => {
+    if (this.state.loginMsg === "Successfully Signup. Please login!") {
+      return (
+        <Alert className="MsgClass" variant="success">
+          {this.state.loginMsg}
+        </Alert>
+      );
+    } else if (this.state.loginMsg) {
+      return (
+        <Alert className="MsgClass" variant="danger">
+          {this.state.loginMsg}
+        </Alert>
+      );
+    } else {
+      return (
+        <Alert className="MsgClass" variant="info">
+          Please login in
+        </Alert>
+      );
+    }
+  };
+
   render() {
     return (
-      <div className="signInUp">
-        <h1>Log in</h1>
-        <input
-          type="text"
-          name="email"
-          placeholder="email"
-          onChange={(e) => this.setState({ email: e.target.value })}
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={(e) => this.setState({ password: e.target.value })}
-        />
-        <button onClick={this.input}>Sign in</button>
-        <Link to="/signup">
-          <button>Create Account</button>
-        </Link>
-        <h4 className="msg">{this.state.loginMsg}</h4>
+      <div>
+        <h1 className="top-margin">Note App</h1>
+        <Card className="text-left FormClass">
+          <Card.Header>
+            <h3>Login</h3>
+          </Card.Header>
+          <Card.Body>
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              type="text"
+              name="email"
+              placeholder="Email"
+              onChange={(e) => this.setState({ email: e.target.value })}
+            />
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              placeholder="Password"
+              onChange={(e) => this.setState({ password: e.target.value })}
+            />
+            <Button
+              className="margin-right"
+              variant="info"
+              onClick={this.input}
+            >
+              Login In
+            </Button>
+            <Link to="/signup">
+              <Button className="margin-right" variant="info">
+                Sign up
+              </Button>
+            </Link>
+            {this.backenMsg()}
+          </Card.Body>
+        </Card>
       </div>
     );
   }

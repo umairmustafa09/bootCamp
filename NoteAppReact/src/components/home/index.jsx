@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { Card, Button, Form, Navbar, InputGroup } from "react-bootstrap";
 
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
 import isLoggedIn from "../../helper/is_logged_in";
 import store from "store";
-import "./style.css";
+import "../style.css";
 
 class Home extends Component {
   state = {
@@ -56,7 +57,7 @@ class Home extends Component {
   };
 
   edit = (index) => {
-    this.props.history.push("/update", {
+    this.props.history.push("/Update", {
       item: this.state.notes[index],
       index
     });
@@ -76,54 +77,64 @@ class Home extends Component {
 
   renderNotes = () => {
     return this.state.notes.map((note, i) => (
-      <div key={i}>
-        <p>
-          {note.title} <br />
-          {note.body}
-          <br />
-          <button
+      <Card className="text-left noteContainer" key={i}>
+        <Card.Header>
+          <h3>{note.title}</h3>
+        </Card.Header>
+        <Card.Body>
+          <Card.Text>{note.body}</Card.Text>
+          <Button
+            className="move-right_Float"
+            variant="info"
+            onClick={() => {
+              this.remove(i);
+            }}
+          >
+            remove
+          </Button>
+          <Button
+            className="move-right_Float "
+            variant="info"
             onClick={() => {
               this.edit(i);
             }}
           >
             Edit
-          </button>
-          <button
-            onClick={() => {
-              this.remove(i);
-            }}
-          >
-            Delete
-          </button>
-        </p>
-      </div>
+          </Button>
+        </Card.Body>
+      </Card>
     ));
   };
 
   displaySearch = () => {
     return this.state.searched.map((note, i) => {
       return (
-        <div key={i}>
-          <p>
-            {note.title} <br />
-            {note.body}
-            <br />
-            <button
+        <Card className="text-left noteContainer" key={i}>
+          <Card.Header>
+            <h3>{note.title}</h3>
+          </Card.Header>
+          <Card.Body>
+            <Card.Text>{note.body}</Card.Text>
+            <Button
+              className="move-right_Float"
+              variant="info"
+              onClick={() => {
+                this.remove(i);
+              }}
+            >
+              remove
+            </Button>
+            <Button
+              className="move-right_Float"
+              variant="info"
               onClick={() => {
                 this.edit(i);
               }}
             >
               Edit
-            </button>
-            <button
-              onClick={() => {
-                this.remove(i);
-              }}
-            >
-              Delete
-            </button>
-          </p>
-        </div>
+            </Button>
+          </Card.Body>
+        </Card>
       );
     });
   };
@@ -131,29 +142,38 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <h3 className="userMsg">Happy Noting {this.state.userName}</h3>
-        <button className="logout" onClick={this.handleLogout}>
-          log out {this.state.userName}
-        </button>
-        <div className="container">
-          <input
+        <Navbar className="bg-light justify-content-between">
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text id="basic-addon1">
+                User: {this.state.userName}
+              </InputGroup.Text>
+              <Button
+                className="move-left"
+                variant="info"
+                onClick={this.handleLogout}
+              >
+                Log out
+              </Button>
+              <Link to="/Create">
+                <Button className="move-left" variant="info">
+                  Create Note
+                </Button>
+              </Link>
+            </InputGroup.Prepend>
+          </InputGroup>
+          <Form.Control
             type="text"
-            placeholder="Filter By title"
+            placeholder="Input title to filter notes"
             id="input"
             onChange={this.search}
           />
-        </div>
+        </Navbar>
         <div className="container">
-          <Link to="/note">
-            <button>Create Note</button>
-          </Link>
+          <h3>{this.state.userName}'s Notes</h3>
         </div>
-        <div className="noteContainer">{this.displaySearch()}</div>
-        {this.state.isSearchEnabel ? (
-          <div />
-        ) : (
-          <div className="noteContainer">{this.renderNotes()}</div>
-        )}
+        <div>{this.displaySearch()}</div>
+        {this.state.isSearchEnabel ? <div /> : <div>{this.renderNotes()}</div>}
       </div>
     );
   }
