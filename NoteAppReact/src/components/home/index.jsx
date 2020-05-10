@@ -6,6 +6,7 @@ import { Card, Button, Form, Navbar, InputGroup, Modal } from "react-bootstrap";
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
 import isLoggedIn from "../../helper/is_logged_in";
+import emptyLogo from "../../services/logo/empty.png";
 import store from "store";
 import "../style.css";
 
@@ -177,6 +178,14 @@ class Home extends Component {
         <div className="container">
           <h3>{this.state.userName}'s Notes</h3>
         </div>
+        {this.state.notes.length === 0 ? (
+          <div>
+            <img className="image_style" src={emptyLogo} alt="emptyLogo" />;
+            <h3>There are no notes</h3>
+          </div>
+        ) : (
+          <div />
+        )}
         {!this.state.isSearchEnable ? (
           <div>{this.renderNotes()}</div>
         ) : (

@@ -6,6 +6,7 @@ import { Card, Button, Form, Navbar, InputGroup, Modal } from "react-bootstrap";
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
 import UsersAction from "../../store/Actions/users";
+import emptyLogo from "../../services/logo/empty.png";
 import moment from "moment";
 import store from "store";
 import "../style.css";
@@ -15,8 +16,10 @@ class Dashboard extends Component {
     user: this.props.user || {},
     users: this.props.users || [],
     notes: this.props.notes.Notes || [],
+    usersLength: 0,
     searched: [],
-    userName: "",
+    userFullName: "",
+    username: "",
     noteMonths: new Array(12).fill(0),
     notesData: {},
     showModel: false,
@@ -43,7 +46,8 @@ class Dashboard extends Component {
       this.props.getNotes();
       this.props.getUsers();
       this.setState({
-        userName: `${data.user.firstName} ${data.user.lastName}`
+        userFullName: `${data.user.firstName} ${data.user.lastName}`,
+        username: data.user.username
       });
     } else {
       store.remove("loggedIn");
@@ -54,11 +58,12 @@ class Dashboard extends Component {
   static getDerivedStateFromProps(props, state) {
     if (props.users !== state.users) {
       const notes = props.notes.Notes;
+      const noteMonths = state.noteMonths;
       if (notes) {
         props.notes.Notes.forEach((note) => {
           const timeObject = moment(note.createdAt).toObject();
           const month = Number(timeObject.months);
-          state.noteMonths[month] = state.noteMonths[month] + 1;
+          noteMonths[month] = noteMonths[month] + 1;
         });
       }
       return {
@@ -72,11 +77,10 @@ class Dashboard extends Component {
               backgroundColor: "rgba(75,192,192,1)",
               borderColor: "rgba(0,0,0,1)",
               borderWidth: 2,
-              data: state.noteMonths
+              data: noteMonths
             }
           ]
-        },
-        noteMonths: state.noteMonths
+        }
       };
     }
     return null;
@@ -93,7 +97,7 @@ class Dashboard extends Component {
 
   remove = (index) => {
     this.modelClose();
-    const users = this.state.users.data.user;
+    const users = this.state.users.data;
     const userToDelete = users.splice(index, 1);
     const afterDel = users;
     this.setState({ users: afterDel });
@@ -102,12 +106,12 @@ class Dashboard extends Component {
 
   search = (e) => {
     try {
-      const users = this.state.users.data.user.filter((users) => {
+      const users = this.state.users.data.filter((users) => {
         const regex = new RegExp(e.target.value, "gi");
         const fullname = `${users.firstName} ${users.lastName}`;
         return fullname.match(regex);
       });
-      users.length === this.state.users.data.user.length
+      users.length === this.state.users.data.length
         ? this.setState({ isSearchEnable: false })
         : this.setState({ isSearchEnable: true });
       this.setState({ searched: users });
@@ -119,30 +123,38 @@ class Dashboard extends Component {
   renderNotes = () => {
     const users = this.state.users;
     if (users.data)
-      return this.state.users.data.user.map((user, i) => (
-        <Card className="text-left noteContainer" key={i}>
-          <Card.Header>
-            <h3>
-              {user.firstName} {user.lastName}
-            </h3>
-          </Card.Header>
-          <Card.Body>
-            <Card.Text>@{user.username}</Card.Text>
-            <Card.Text>
-              User sign up on {user.createdAt.substr(0, 10)}
-            </Card.Text>
-            <Button
-              className="move-right_Float"
-              variant="info"
-              onClick={() => {
-                this.modelShow(i);
-              }}
-            >
-              remove
-            </Button>
-          </Card.Body>
-        </Card>
-      ));
+      if (users.data.length === 0)
+        return (
+          <div>
+            <img className="image_style" src={emptyLogo} alt="emptyLogo" />;
+            <h3>There are no user</h3>
+          </div>
+        );
+      else
+        return this.state.users.data.map((user, i) => (
+          <Card className="text-left noteContainer" key={i}>
+            <Card.Header>
+              <h3>
+                {user.firstName} {user.lastName}
+              </h3>
+            </Card.Header>
+            <Card.Body>
+              <Card.Text>@{user.username}</Card.Text>
+              <Card.Text>
+                User sign up on {user.createdAt.substr(0, 10)}
+              </Card.Text>
+              <Button
+                className="move-right_Float"
+                variant="info"
+                onClick={() => {
+                  this.modelShow(i);
+                }}
+              >
+                remove
+              </Button>
+            </Card.Body>
+          </Card>
+        ));
     else return <div />;
   };
 
@@ -187,14 +199,20 @@ class Dashboard extends Component {
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text id="basic-addon1">
-                Admin: {this.state.userName}
+                Admin: {this.state.userFullName}
+              </InputGroup.Text>
+              <Button variant="info" onClick={this.handleLogout}>
+                Log out
+              </Button>
+              <InputGroup.Text id="basic-addon1">
+                @{this.state.username}
               </InputGroup.Text>
               <Button
-                className="move-left"
+                className="nav-margin"
                 variant="info"
-                onClick={this.handleLogout}
+                onClick={() => this.props.history.push("/login")} // changing route for refersh bar chart canvas due to loggedin its comes back to dashboard
               >
-                Log out
+                Refersh Bar
               </Button>
             </InputGroup.Prepend>
           </InputGroup>
