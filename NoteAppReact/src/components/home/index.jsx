@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { Card, Button, Form, Navbar, InputGroup } from "react-bootstrap";
+import { Card, Button, Form, Navbar, InputGroup, Modal } from "react-bootstrap";
 
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
@@ -15,6 +15,7 @@ class Home extends Component {
     user: this.props.user || {},
     searched: [],
     userName: "",
+    showModel: false,
     isSearchEnable: false
   };
 
@@ -49,7 +50,11 @@ class Home extends Component {
     this.props.history.push("/login");
   };
 
+  modelShow = () => this.setState({ showModel: true }); //modelshow hava an index of note
+  modelClose = () => this.setState({ showModel: false });
+
   remove = (index) => {
+    this.modelClose();
     const notes = this.state.notes;
     const note = notes.splice(index, 1);
     const afterDel = notes;
@@ -91,7 +96,7 @@ class Home extends Component {
             className="move-right_Float"
             variant="info"
             onClick={() => {
-              this.remove(i);
+              this.modelShow(i);
             }}
           >
             remove
@@ -128,6 +133,20 @@ class Home extends Component {
   render() {
     return (
       <div>
+        <Modal show={this.state.showModel} onHide={this.modelClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete note ?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.modelClose}>
+              Cancel
+            </Button>
+            <Button variant="info" onClick={this.remove}>
+              Delete note
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <Navbar className="bg-light justify-content-between">
           <InputGroup>
             <InputGroup.Prepend>

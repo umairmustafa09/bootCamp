@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Bar } from "react-chartjs-2";
-import { Card, Button, Form, Navbar, InputGroup } from "react-bootstrap";
+import { Card, Button, Form, Navbar, InputGroup, Modal } from "react-bootstrap";
 
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
@@ -19,6 +19,7 @@ class Dashboard extends Component {
     userName: "",
     noteMonths: new Array(12).fill(0),
     notesData: {},
+    showModel: false,
     isSearchEnable: false,
     labels: [
       "Jan",
@@ -87,7 +88,11 @@ class Dashboard extends Component {
     this.props.history.push("/login");
   };
 
+  modelShow = () => this.setState({ showModel: true }); // modelshow hava an index of user
+  modelClose = () => this.setState({ showModel: false });
+
   remove = (index) => {
+    this.modelClose();
     const users = this.state.users.data.user;
     const userToDelete = users.splice(index, 1);
     const afterDel = users;
@@ -130,7 +135,7 @@ class Dashboard extends Component {
               className="move-right_Float"
               variant="info"
               onClick={() => {
-                this.remove(i);
+                this.modelShow(i);
               }}
             >
               remove
@@ -164,6 +169,20 @@ class Dashboard extends Component {
   render() {
     return (
       <div>
+        <Modal show={this.state.showModel} onHide={this.modelClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Delete</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Are you sure you want to delete user ?</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={this.modelClose}>
+              Cancel
+            </Button>
+            <Button variant="info" onClick={this.remove}>
+              Delete user
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <Navbar className="bg-light justify-content-between">
           <InputGroup>
             <InputGroup.Prepend>
