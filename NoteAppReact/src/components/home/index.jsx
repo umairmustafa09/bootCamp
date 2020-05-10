@@ -15,7 +15,7 @@ class Home extends Component {
     user: this.props.user || {},
     searched: [],
     userName: "",
-    isSearchEnabel: false
+    isSearchEnable: false
   };
 
   componentDidMount = () => {
@@ -50,9 +50,7 @@ class Home extends Component {
   };
 
   remove = (index) => {
-    const notes = this.state.searched
-      ? this.state.searched
-      : this.state.users.notes;
+    const notes = this.state.notes;
     const note = notes.splice(index, 1);
     const afterDel = notes;
     this.setState({ notes: afterDel });
@@ -72,7 +70,10 @@ class Home extends Component {
         const regex = new RegExp(e.target.value, "gi");
         return notes.title.match(regex);
       });
-      this.setState({ searched: notes, isSearchEnabel: true });
+      notes.length === this.state.notes.length
+        ? this.setState({ isSearchEnable: false })
+        : this.setState({ isSearchEnable: true });
+      this.setState({ searched: notes });
     } catch (e) {
       return [];
     }
@@ -118,24 +119,6 @@ class Home extends Component {
           </Card.Header>
           <Card.Body>
             <Card.Text>{note.body}</Card.Text>
-            <Button
-              className="move-right_Float"
-              variant="info"
-              onClick={() => {
-                this.remove(i);
-              }}
-            >
-              remove
-            </Button>
-            <Button
-              className="move-right_Float"
-              variant="info"
-              onClick={() => {
-                this.edit(i);
-              }}
-            >
-              Edit
-            </Button>
           </Card.Body>
         </Card>
       );
@@ -175,8 +158,11 @@ class Home extends Component {
         <div className="container">
           <h3>{this.state.userName}'s Notes</h3>
         </div>
-        <div>{this.displaySearch()}</div>
-        {this.state.isSearchEnabel ? <div /> : <div>{this.renderNotes()}</div>}
+        {!this.state.isSearchEnable ? (
+          <div>{this.renderNotes()}</div>
+        ) : (
+          <div>{this.displaySearch()}</div>
+        )}
       </div>
     );
   }

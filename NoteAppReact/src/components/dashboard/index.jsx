@@ -19,6 +19,7 @@ class Dashboard extends Component {
     userName: "",
     noteMonths: new Array(12).fill(0),
     notesData: {},
+    isSearchEnable: false,
     labels: [
       "Jan",
       "Feb",
@@ -77,6 +78,7 @@ class Dashboard extends Component {
         noteMonths: state.noteMonths
       };
     }
+    return null;
   }
 
   handleLogout = () => {
@@ -86,9 +88,7 @@ class Dashboard extends Component {
   };
 
   remove = (index) => {
-    const users = this.state.searched
-      ? this.state.searched
-      : this.state.users.data.user;
+    const users = this.state.users.data.user;
     const userToDelete = users.splice(index, 1);
     const afterDel = users;
     this.setState({ users: afterDel });
@@ -102,7 +102,10 @@ class Dashboard extends Component {
         const fullname = `${users.firstName} ${users.lastName}`;
         return fullname.match(regex);
       });
-      this.setState({ searched: users, isSearchEnabel: true });
+      users.length === this.state.users.data.user.length
+        ? this.setState({ isSearchEnable: false })
+        : this.setState({ isSearchEnable: true });
+      this.setState({ searched: users });
     } catch (e) {
       return [];
     }
@@ -152,15 +155,6 @@ class Dashboard extends Component {
             <Card.Text>
               User sign up on {user.createdAt.substr(0, 10)}
             </Card.Text>
-            <Button
-              className="move-right_Float"
-              variant="info"
-              onClick={() => {
-                this.remove(i);
-              }}
-            >
-              remove
-            </Button>
           </Card.Body>
         </Card>
       );
@@ -210,8 +204,11 @@ class Dashboard extends Component {
         </div>
         <br />
         <h3>Users List</h3>
-        <div>{this.displaySearch()}</div>
-        {this.state.isSearchEnabel ? <div /> : <div>{this.renderNotes()}</div>}
+        {!this.state.isSearchEnable ? (
+          <div>{this.renderNotes()}</div>
+        ) : (
+          <div>{this.displaySearch()}</div>
+        )}
       </div>
     );
   }
