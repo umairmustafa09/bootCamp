@@ -21,7 +21,7 @@ class Dashboard extends Component {
     userFullName: "",
     username: "",
     noteMonths: new Array(12).fill(0),
-    notesData: {},
+    chartData: {},
     showModel: false,
     isSearchEnable: false,
     labels: [
@@ -69,11 +69,11 @@ class Dashboard extends Component {
       return {
         notes: props.notes.Notes || [],
         users: props.users || [],
-        notesData: {
+        chartData: {
           labels: state.labels,
           datasets: [
             {
-              label: "Notes",
+              label: "click to show note traffic",
               backgroundColor: "rgba(75,192,192,1)",
               borderColor: "rgba(0,0,0,1)",
               borderWidth: 2,
@@ -132,7 +132,7 @@ class Dashboard extends Component {
         );
       else
         return this.state.users.data.map((user, i) => (
-          <Card className="text-left noteContainer" key={i}>
+          <Card className="text-left boxContainer" key={i}>
             <Card.Header>
               <h3>
                 {user.firstName} {user.lastName}
@@ -161,7 +161,7 @@ class Dashboard extends Component {
   displaySearch = () => {
     return this.state.searched.map((user, i) => {
       return (
-        <Card className="text-left noteContainer" key={i}>
+        <Card className="text-left boxContainer" key={i}>
           <Card.Header>
             <h3>
               {user.firstName} {user.lastName}
@@ -199,20 +199,10 @@ class Dashboard extends Component {
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text id="basic-addon1">
-                Admin: {this.state.userFullName}
+                @{this.state.username}
               </InputGroup.Text>
               <Button variant="info" onClick={this.handleLogout}>
                 Log out
-              </Button>
-              <InputGroup.Text id="basic-addon1">
-                @{this.state.username}
-              </InputGroup.Text>
-              <Button
-                className="nav-margin"
-                variant="info"
-                onClick={() => this.props.history.push("/login")} // changing route for refersh bar chart canvas due to loggedin its comes back to dashboard
-              >
-                Refersh Bar
               </Button>
             </InputGroup.Prepend>
           </InputGroup>
@@ -223,9 +213,12 @@ class Dashboard extends Component {
             onChange={this.search}
           />
         </Navbar>
+        <div className="container">
+          <h3>Admin: {this.state.userFullName}</h3>
+        </div>
         <div className="chart">
           <Bar
-            data={this.state.notesData}
+            data={this.state.chartData}
             options={{
               title: {
                 display: true,

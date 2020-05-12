@@ -15,7 +15,8 @@ class Home extends Component {
     notes: this.props.notes.Notes || [],
     user: this.props.user || {},
     searched: [],
-    userName: "",
+    userFullName: "",
+    useranme: "",
     showModel: false,
     isSearchEnable: false
   };
@@ -29,7 +30,8 @@ class Home extends Component {
     if (data) {
       this.props.getNote(data.user.email);
       this.setState({
-        userName: `${data.user.firstName} ${data.user.lastName}`
+        userFullName: `${data.user.firstName} ${data.user.lastName}`,
+        username: data.user.username
       });
     } else {
       store.remove("loggedIn");
@@ -87,7 +89,7 @@ class Home extends Component {
 
   renderNotes = () => {
     return this.state.notes.map((note, i) => (
-      <Card className="text-left noteContainer" key={i}>
+      <Card className="text-left boxContainer" key={i}>
         <Card.Header>
           <h3>{note.title}</h3>
         </Card.Header>
@@ -119,7 +121,7 @@ class Home extends Component {
   displaySearch = () => {
     return this.state.searched.map((note, i) => {
       return (
-        <Card className="text-left noteContainer" key={i}>
+        <Card className="text-left boxContainer" key={i}>
           <Card.Header>
             <h3>{note.title}</h3>
           </Card.Header>
@@ -152,7 +154,7 @@ class Home extends Component {
           <InputGroup>
             <InputGroup.Prepend>
               <InputGroup.Text id="basic-addon1">
-                User: {this.state.userName}
+                @{this.state.username}
               </InputGroup.Text>
               <Button
                 className="move-left"
@@ -176,7 +178,7 @@ class Home extends Component {
           />
         </Navbar>
         <div className="container">
-          <h3>{this.state.userName}'s Notes</h3>
+          <h3>{this.state.userFullName}'s Notes</h3>
         </div>
         {this.state.notes.length === 0 ? (
           <div>
