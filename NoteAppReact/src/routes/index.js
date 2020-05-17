@@ -9,17 +9,33 @@ import Dashboard from "../components/dashboard/index";
 
 export default class Routes extends Component {
   render() {
+    if (this.props.user)
+      return (
+        <BrowserRouter>
+          <div>
+            <center>
+              <Switch>
+                <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/" component={Home} />
+                <Route exact path="/create" component={Note} />
+                <Route exact path="/update" component={Note} />
+                <Route exact path="*">
+                  <Redirect to="/" />
+                </Route>
+              </Switch>
+            </center>
+          </div>
+        </BrowserRouter>
+      );
     return (
       <BrowserRouter>
         <div>
           <center>
             <Switch>
-              <Route exact path="/signup" component={SignUp} />
-              <Route exact path="/login" component={SignIn} />
               <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/" component={Home} />
-              <Route exact path="/create" component={Note} />
-              <Route exact path="/update" component={Note} />
+              <Route exact path="/home" component={Home} />
+              <Route exact path="/signup" component={SignUp} />
+              <Route exact path="/" component={SignIn} />
               <Route exact path="*">
                 <Redirect to="/" />
               </Route>

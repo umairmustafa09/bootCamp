@@ -25,11 +25,6 @@ class Note extends Component {
   componentDidMount() {
     if (!isLoggedIn()) {
       return this.props.history.push("/login");
-    } else {
-      const data = this.state.user.data;
-      if (!data) {
-        return this.props.history.push("/dashboard");
-      }
     }
 
     const { history } = this.props;
@@ -45,6 +40,16 @@ class Note extends Component {
     }
   }
 
+  invalidRoute = (user) => {
+    if (user.data) {
+      if (user.data.user.role !== "S") this.props.history.goBack();
+    }
+  };
+
+  componentDidUpdate = (prevState) => {
+    if (prevState.user !== this.props.user) this.invalidRoute(this.props.user);
+  };
+
   static getDerivedStateFromProps(props, state) {
     if (props.noteMsg !== state.noteMsg) {
       return {
@@ -53,6 +58,7 @@ class Note extends Component {
           : props.notes.message || ""
       };
     }
+    return null;
   }
 
   inputData = () => {
@@ -148,6 +154,7 @@ class Note extends Component {
 }
 
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
     notes: state.noteReducer.notes,
     user: state.userReducer.obj

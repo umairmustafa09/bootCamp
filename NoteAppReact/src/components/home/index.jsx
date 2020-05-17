@@ -5,8 +5,8 @@ import { Card, Button, Form, Navbar, InputGroup, Modal } from "react-bootstrap";
 
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
-import isLoggedIn from "../../helper/is_logged_in";
 import emptyLogo from "../../services/logo/empty.png";
+import isLoggedIn from "../../helper/is_logged_in";
 import store from "store";
 import "../style.css";
 
@@ -17,49 +17,54 @@ class Home extends Component {
     searched: [],
     userFullName: "",
     useranme: "",
+    index: 0,
     showModel: false,
     isSearchEnable: false
   };
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     if (!isLoggedIn()) {
       return this.props.history.push("/login");
     }
+    this.retrieveNotes(this.props.user);
+  };
 
-    const data = this.props.user.data;
-    if (data) {
-      this.props.getNote(data.user.email);
-      this.setState({
-        userFullName: `${data.user.firstName} ${data.user.lastName}`,
-        username: data.user.username
-      });
-    } else {
-      store.remove("loggedIn");
-      this.props.history.push("/login");
+  retrieveNotes = (user) => {
+    if (user.data) {
+      if (user.data.user.role !== "S") this.props.history.goBack();
+      this.props.getNote(user.data.user.email);
     }
   };
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.notes !== state.notes) {
+  componentDidUpdate = (prevState) => {
+    if (prevState.user !== this.props.user) this.retrieveNotes(this.props.user);
+  };
+
+  static getDerivedStateFromProps(props) {
+    const data = props.user.data;
+    if (data) {
       return {
-        notes: props.notes.Notes || []
+        notes: props.notes.Notes || [],
+        userFullName: `${data.user.firstName} ${data.user.lastName}`,
+        username: data.user.username
       };
     }
+    return null;
   }
 
   handleLogout = () => {
-    store.remove("loggedIn");
+    store.remove("user");
     this.props.logoutUser();
-    this.props.history.push("/login");
+    window.location.reload();
   };
 
-  modelShow = () => this.setState({ showModel: true }); //modelshow hava an index of note
+  modelShow = (index) => this.setState({ showModel: true, index: index });
   modelClose = () => this.setState({ showModel: false });
 
-  remove = (index) => {
+  remove = () => {
     this.modelClose();
     const notes = this.state.notes;
-    const note = notes.splice(index, 1);
+    const note = notes.splice(this.state.index, 1);
     const afterDel = notes;
     this.setState({ notes: afterDel });
     this.props.deleteNote(note[0]._id);
@@ -177,21 +182,28 @@ class Home extends Component {
             onChange={this.search}
           />
         </Navbar>
-        <div className="container">
-          <h3>{this.state.userFullName}'s Notes</h3>
-        </div>
-        {this.state.notes.length === 0 ? (
-          <div>
-            <img className="image_style" src={emptyLogo} alt="emptyLogo" />;
-            <h3>There are no notes</h3>
-          </div>
-        ) : (
-          <div />
-        )}
         {!this.state.isSearchEnable ? (
-          <div>{this.renderNotes()}</div>
+          <React.Fragment>
+            <div className="container">
+              <h3>{this.state.userFullName}'s Notes</h3>
+            </div>
+            {this.state.notes.length === 0 ? (
+              <div>
+                <img className="image_style" src={emptyLogo} alt="emptyLogo" />;
+                <h3>There are no notes</h3>
+              </div>
+            ) : (
+              <div />
+            )}
+            <div>{this.renderNotes()}</div>
+          </React.Fragment>
         ) : (
-          <div>{this.displaySearch()}</div>
+          <React.Fragment>
+            <div className="container">
+              <h3>Filter notes {this.state.searched.length}</h3>
+            </div>
+            <div>{this.displaySearch()}</div>
+          </React.Fragment>
         )}
       </div>
     );

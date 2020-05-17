@@ -41,7 +41,8 @@
 }
 
 .chart {
-  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
+  background-color: whitesmoke;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   width: 60%;
   height: 60%;
 }

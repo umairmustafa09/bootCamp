@@ -23,9 +23,12 @@ class SignIn extends Component {
 
   navToHome = () => {
     const user = this.props.loginUser;
-    if (user) {
+    if (user.obj) {
       if (user.obj.message === "Successfully Login") {
-        store.set("loggedIn", true);
+        store.set("user", {
+          token: user.obj.data.token,
+          _id: user.obj.data.user._id
+        });
         user.obj.data.user.role === "S"
           ? this.props.history.push("/home")
           : this.props.history.push("/dashboard");
@@ -45,9 +48,6 @@ class SignIn extends Component {
           ? this.props.history.push("/home")
           : this.props.history.push("/dashboard");
       }
-    } else {
-      store.remove("loggedIn");
-      this.props.history.push("/login");
     }
   };
 

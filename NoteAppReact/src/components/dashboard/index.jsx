@@ -7,6 +7,7 @@ import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
 import UsersAction from "../../store/Actions/users";
 import emptyLogo from "../../services/logo/empty.png";
+import isLoggedIn from "../../helper/is_logged_in";
 import moment from "moment";
 import store from "store";
 import "../style.css";
@@ -20,7 +21,8 @@ class Dashboard extends Component {
     searched: [],
     userFullName: "",
     username: "",
-    noteMonths: new Array(12).fill(0),
+    index: 0,
+    noteMonths: [],
     chartData: {},
     showModel: false,
     isSearchEnable: false,
@@ -41,24 +43,30 @@ class Dashboard extends Component {
   };
 
   componentDidMount = () => {
-    const data = this.state.user.data;
-    if (data) {
-      this.props.getNotes();
-      this.props.getUsers();
-      this.setState({
-        userFullName: `${data.user.firstName} ${data.user.lastName}`,
-        username: data.user.username
-      });
-    } else {
-      store.remove("loggedIn");
-      return this.props.history.push("/login");
+    if (!isLoggedIn()) return this.props.history.push("/login");
+    this.retrieveNotesAndUsers(this.state.user);
+  };
+
+  retrieveNotesAndUsers = async (user) => {
+    if (user.data) {
+      if (user.data.user.role === "S") this.props.history.goBack();
+      else {
+        this.props.getNotes();
+        this.props.getUsers();
+      }
     }
   };
 
+  componentDidUpdate = (prevState) => {
+    if (prevState.user !== this.props.user)
+      this.retrieveNotesAndUsers(this.props.user);
+  };
+
   static getDerivedStateFromProps(props, state) {
-    if (props.users !== state.users) {
+    const data = props.user.data;
+    if (data) {
       const notes = props.notes.Notes;
-      const noteMonths = state.noteMonths;
+      const noteMonths = new Array(12).fill(0);
       if (notes) {
         props.notes.Notes.forEach((note) => {
           const timeObject = moment(note.createdAt).toObject();
@@ -69,6 +77,9 @@ class Dashboard extends Component {
       return {
         notes: props.notes.Notes || [],
         users: props.users || [],
+        userFullName: `${data.user.firstName} ${data.user.lastName}`,
+        username: data.user.username,
+        noteMonths: noteMonths,
         chartData: {
           labels: state.labels,
           datasets: [
@@ -87,18 +98,18 @@ class Dashboard extends Component {
   }
 
   handleLogout = () => {
-    store.remove("loggedIn");
+    store.remove("user");
     this.props.logoutUser();
-    this.props.history.push("/login");
+    window.location.reload();
   };
 
-  modelShow = () => this.setState({ showModel: true }); // modelshow hava an index of user
+  modelShow = (index) => this.setState({ showModel: true, index: index });
   modelClose = () => this.setState({ showModel: false });
 
-  remove = (index) => {
+  remove = () => {
     this.modelClose();
     const users = this.state.users.data;
-    const userToDelete = users.splice(index, 1);
+    const userToDelete = users.splice(this.state.index, 1);
     const afterDel = users;
     this.setState({ users: afterDel });
     this.props.deleteUser(userToDelete[0]._id);
@@ -208,36 +219,47 @@ class Dashboard extends Component {
           </InputGroup>
           <Form.Control
             type="text"
-            placeholder="Input user name to filter users"
+            placeholder="Type user name to filter users"
             id="input"
             onChange={this.search}
           />
         </Navbar>
-        <div className="container">
-          <h3>Admin: {this.state.userFullName}</h3>
-        </div>
-        <div className="chart">
-          <Bar
-            data={this.state.chartData}
-            options={{
-              title: {
-                display: true,
-                text: "NOTE GRAPH",
-                fontSize: 20
-              },
-              legend: {
-                display: true,
-                position: "right"
-              }
-            }}
-          />
-        </div>
-        <br />
-        <h3>Users List</h3>
         {!this.state.isSearchEnable ? (
-          <div>{this.renderNotes()}</div>
+          <React.Fragment>
+            <div className="container">
+              <h3>Admin: {this.state.userFullName}</h3>
+            </div>
+            <div className="chart">
+              {this.props.notes.Notes ? (
+                <Bar
+                  data={this.state.chartData}
+                  options={{
+                    title: {
+                      display: true,
+                      text: "NOTE GRAPH",
+                      fontSize: 30
+                    },
+                    legend: {
+                      display: true,
+                      position: "right"
+                    }
+                  }}
+                />
+              ) : (
+                <div />
+              )}
+            </div>
+            <br />
+            <h3>Users List</h3>
+            <div>{this.renderNotes()}</div>
+          </React.Fragment>
         ) : (
-          <div>{this.displaySearch()}</div>
+          <React.Fragment>
+            <div className="container">
+              <h3>Filter users {this.state.searched.length}</h3>
+            </div>
+            <div>{this.displaySearch()}</div>
+          </React.Fragment>
         )}
       </div>
     );
