@@ -34,9 +34,11 @@ class SignUp extends Component {
   navToLogin = () => {
     const user = this.props.SignUpUser;
     if (user) {
-      if (user.obj.message === "Successfully Signup. Please login!") {
+      if (
+        user.obj.message === "Successfully Signup. Please login!" ||
+        user.obj.message === "Successfully Login"
+      )
         this.props.history.goBack();
-      }
     }
   };
 

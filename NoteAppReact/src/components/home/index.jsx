@@ -100,6 +100,7 @@ class Home extends Component {
         </Card.Header>
         <Card.Body>
           <Card.Text>{note.body}</Card.Text>
+          <Card.Text>{note.updatedAt.substr(0, 10)}</Card.Text>
           <Button
             className="move-right_Float"
             variant="info"
@@ -168,7 +169,7 @@ class Home extends Component {
               >
                 Log out
               </Button>
-              <Link to="/Create">
+              <Link to="/create">
                 <Button className="move-left" variant="info">
                   Create Note
                 </Button>

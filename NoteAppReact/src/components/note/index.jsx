@@ -41,9 +41,7 @@ class Note extends Component {
   }
 
   invalidRoute = (user) => {
-    if (user.data) {
-      if (user.data.user.role !== "S") this.props.history.goBack();
-    }
+    if (user.data.user.role !== "S") this.props.history.goBack();
   };
 
   componentDidUpdate = (prevState) => {
