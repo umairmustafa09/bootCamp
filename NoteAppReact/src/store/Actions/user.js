@@ -1,4 +1,5 @@
 import ActionTypes from "./ActionTypes";
+import store from "store";
 
 const UserAction = {
   Signup: function (obj) {
@@ -49,6 +50,10 @@ const UserAction = {
         })
         .then((data) => {
           if (data.data.token) {
+            store.set("user", {
+              token: data.data.token,
+              _id: data.data.user._id
+            });
             dispatch({ type: ActionTypes.LOGIN_USER, payload: data });
             return data.data;
           }
@@ -82,6 +87,10 @@ const UserAction = {
         })
         .then((data) => {
           if (data.data.token) {
+            store.set("user", {
+              token: data.data.token,
+              _id: data.data.user._id
+            });
             dispatch({ type: ActionTypes.LOGIN_USER, payload: data });
             return data.data;
           }

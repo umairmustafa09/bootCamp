@@ -5,7 +5,6 @@ import { Card, Button, Form, Alert } from "react-bootstrap";
 
 import UserAction from "../../store/Actions/user";
 import isLoggedIn from "../../helper/is_logged_in";
-import store from "store";
 import "../style.css";
 
 class SignIn extends Component {
@@ -25,10 +24,6 @@ class SignIn extends Component {
     const user = this.props.loginUser;
     if (user.obj) {
       if (user.obj.message === "Successfully Login") {
-        store.set("user", {
-          token: user.obj.data.token,
-          _id: user.obj.data.user._id
-        });
         user.obj.data.user.role === "S"
           ? this.props.history.push("/home")
           : this.props.history.push("/dashboard");

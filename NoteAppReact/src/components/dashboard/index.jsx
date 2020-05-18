@@ -84,7 +84,7 @@ class Dashboard extends Component {
           labels: state.labels,
           datasets: [
             {
-              label: "click to show note traffic",
+              label: "Notes",
               backgroundColor: "rgba(75,192,192,1)",
               borderColor: "rgba(0,0,0,1)",
               borderWidth: 2,
