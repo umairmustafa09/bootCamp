@@ -5,6 +5,7 @@ import { Card, Button, Form, Alert } from "react-bootstrap";
 
 import UserAction from "../../store/Actions/user";
 import isLoggedIn from "../../helper/is_logged_in";
+import noteLogo from "../../services/logo/note.png";
 import "../style.css";
 
 class SignIn extends Component {
@@ -79,7 +80,7 @@ class SignIn extends Component {
   render() {
     return (
       <div>
-        <h1 className="top-margin">Note App</h1>
+        <img className="noteLogo" src={noteLogo} alt="emptyLogo" />
         <Card className="text-left FormClass">
           <Card.Header>
             <h3>Login</h3>

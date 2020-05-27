@@ -48,6 +48,12 @@
 }
 
 .image_style {
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
+}
+
+.noteLogo {
+  margin-top: 20px;
+  width: 120px;
+  height: 120px;
 }

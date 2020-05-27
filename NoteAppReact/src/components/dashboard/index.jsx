@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Bar } from "react-chartjs-2";
-import { Card, Button, Form, Navbar, InputGroup, Modal } from "react-bootstrap";
+import { Card, Button, Form, Navbar, Modal, Nav } from "react-bootstrap";
 
 import NotesAction from "../../store/Actions/notes";
 import UserAction from "../../store/Actions/user";
@@ -137,7 +137,7 @@ class Dashboard extends Component {
       if (users.data.length === 0)
         return (
           <div>
-            <img className="image_style" src={emptyLogo} alt="emptyLogo" />;
+            <img className="image_style" src={emptyLogo} alt="emptyLogo" />
             <h3>There are no user</h3>
           </div>
         );
@@ -206,23 +206,26 @@ class Dashboard extends Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <Navbar className="bg-light justify-content-between">
-          <InputGroup>
-            <InputGroup.Prepend>
-              <InputGroup.Text id="basic-addon1">
-                @{this.state.username}
-              </InputGroup.Text>
-              <Button variant="info" onClick={this.handleLogout}>
-                Log out
-              </Button>
-            </InputGroup.Prepend>
-          </InputGroup>
-          <Form.Control
-            type="text"
-            placeholder="Type user name to filter users"
-            id="input"
-            onChange={this.search}
-          />
+        <Navbar bg="light" expand="lg">
+          <Navbar.Brand>@{this.state.username}</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link>
+                <Button variant="outline-info" onClick={this.handleLogout}>
+                  Log Out
+                </Button>
+              </Nav.Link>
+            </Nav>
+            <Form>
+              <Form.Control
+                type="text"
+                placeholder="Input title to filter notes"
+                id="input"
+                onChange={this.search}
+              />
+            </Form>
+          </Navbar.Collapse>
         </Navbar>
         {!this.state.isSearchEnable ? (
           <React.Fragment>

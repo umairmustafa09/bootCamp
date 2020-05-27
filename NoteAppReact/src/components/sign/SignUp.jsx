@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Card, Button, Form, Alert } from "react-bootstrap";
 
 import UserAction from "../../store/Actions/user";
+import noteLogo from "../../services/logo/note.png";
 import "../style.css";
 
 class SignUp extends Component {
@@ -57,7 +58,7 @@ class SignUp extends Component {
   render() {
     return (
       <div>
-        <h1 className="top-margin">Note App</h1>
+        <img className="noteLogo" src={noteLogo} alt="emptyLogo" />
         <Card className="text-left FormClass">
           <Card.Header>
             <h3>Create Account</h3>
