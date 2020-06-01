@@ -152,7 +152,6 @@ class Note extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     notes: state.noteReducer.notes,
     user: state.userReducer.obj
